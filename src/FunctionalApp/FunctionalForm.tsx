@@ -4,6 +4,8 @@ import { TextInput } from "./Components/TextInput";
 import { UserInformation } from "../types";
 import { isEmailValid } from "../utils/validations";
 import { allCities } from "../utils/all-cities";
+import { formatPhoneNumber } from "../utils/transformations";
+import { Phone } from "./Components/PhoneInput";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -42,6 +44,8 @@ export const FunctionalForm = ({
   const showLastNameError = isSubmitted && !isLastNameInputValid;
   const showEmailInputError = isSubmitted && !isEmailInputValid;
   const showCityInputError = isSubmitted && !isCityInputValid;
+  const showPhoneInputError =
+    isSubmitted && !formatPhoneNumber(phoneInput.join(""));
 
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -145,7 +149,19 @@ export const FunctionalForm = ({
         />
       )}
 
-      <div className="input-wrap">
+      {/* Phone Input */}
+      <Phone
+        phoneInput={phoneInput}
+        setPhoneInput={setPhoneInput}
+      />
+      {showPhoneInputError && (
+        <ErrorMessage
+          message={phoneNumberErrorMessage}
+          show={true}
+        />
+      )}
+
+      {/* <div className="input-wrap">
         <label htmlFor="phone">Phone:</label>
         <div id="phone-input-wrap">
           <input
@@ -172,12 +188,7 @@ export const FunctionalForm = ({
             placeholder="5"
           />
         </div>
-      </div>
-
-      <ErrorMessage
-        message={phoneNumberErrorMessage}
-        show={true}
-      />
+      </div> */}
 
       <input
         type="submit"
