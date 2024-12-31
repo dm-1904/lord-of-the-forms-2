@@ -10,6 +10,7 @@ export const FunctionalApp = () => {
     city: "",
     phone: "",
   });
+  console.log(userData);
   return (
     <>
       <h2>Functional</h2>

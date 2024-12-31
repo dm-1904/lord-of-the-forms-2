@@ -39,15 +39,33 @@ export const FunctionalForm = ({
   const isLastNameInputValid: boolean = lastNameInput.length > 2;
   const isEmailInputValid: boolean = isEmailValid(emailInput);
   const isCityInputValid: boolean = allCities.includes(cityInput);
+  const isPhoneInputValid: boolean = formatPhoneNumber(phoneInput.join(""));
 
   const showFirstNameError = isSubmitted && !isFirstNameInputValid;
   const showLastNameError = isSubmitted && !isLastNameInputValid;
   const showEmailInputError = isSubmitted && !isEmailInputValid;
   const showCityInputError = isSubmitted && !isCityInputValid;
-  const showPhoneInputError =
-    isSubmitted && !formatPhoneNumber(phoneInput.join(""));
+  const showPhoneInputError = isSubmitted && !isPhoneInputValid;
 
   const nameRef = useRef<HTMLInputElement>(null);
+
+  const passUserData = () => {
+    if (
+      isFirstNameInputValid &&
+      isLastNameInputValid &&
+      isEmailInputValid &&
+      isCityInputValid &&
+      isPhoneInputValid
+    ) {
+      setUserData({
+        firstName: firstNameInput,
+        lastName: lastNameInput,
+        email: emailInput,
+        city: cityInput,
+        phone: phoneInput.join("-"),
+      });
+    }
+  };
 
   const reset = () => {
     setFirstNameInput("");
@@ -61,6 +79,7 @@ export const FunctionalForm = ({
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        passUserData();
         setIsSubmitted(true);
         reset();
       }}
@@ -74,10 +93,6 @@ export const FunctionalForm = ({
         inputProps={{
           onChange: (e) => {
             setFirstNameInput(e.target.value);
-            // setUserData({
-            //   ...userData,
-            //   firstName: e.target.value
-            // })
           },
           value: firstNameInput,
           placeholder: "Bilbo",
@@ -160,35 +175,6 @@ export const FunctionalForm = ({
           show={true}
         />
       )}
-
-      {/* <div className="input-wrap">
-        <label htmlFor="phone">Phone:</label>
-        <div id="phone-input-wrap">
-          <input
-            type="text"
-            id="phone-input-1"
-            placeholder="55"
-          />
-          -
-          <input
-            type="text"
-            id="phone-input-2"
-            placeholder="55"
-          />
-          -
-          <input
-            type="text"
-            id="phone-input-3"
-            placeholder="55"
-          />
-          -
-          <input
-            type="text"
-            id="phone-input-4"
-            placeholder="5"
-          />
-        </div>
-      </div> */}
 
       <input
         type="submit"
