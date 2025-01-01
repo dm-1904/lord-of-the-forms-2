@@ -4,7 +4,7 @@ import { TextInput } from "./Components/TextInput";
 import { UserInformation } from "../types";
 import { isEmailValid } from "../utils/validations";
 import { allCities } from "../utils/all-cities";
-import { formatPhoneNumber } from "../utils/transformations";
+import { capitalize, formatPhoneNumber } from "../utils/transformations";
 import { Phone } from "./Components/PhoneInput";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
@@ -83,7 +83,7 @@ export const FunctionalForm = ({
       <TextInput
         inputProps={{
           onChange: (e) => {
-            setFirstNameInput(e.target.value);
+            setFirstNameInput(capitalize(e.target.value));
           },
           value: firstNameInput,
           placeholder: "Bilbo",
@@ -102,7 +102,7 @@ export const FunctionalForm = ({
       <TextInput
         inputProps={{
           onChange: (e) => {
-            setLastNameInput(e.target.value);
+            setLastNameInput(capitalize(e.target.value));
           },
           value: lastNameInput,
           placeholder: "Baggins",

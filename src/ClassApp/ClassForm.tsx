@@ -7,7 +7,11 @@ const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "State is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
-export class ClassForm extends Component {
+interface ClassFormProps {
+  setUserData: () => void;
+}
+
+export class ClassForm extends Component<ClassFormProps> {
   render() {
     return (
       <form>
@@ -20,45 +24,79 @@ export class ClassForm extends Component {
           <label>{"First Name"}:</label>
           <input placeholder="Bilbo" />
         </div>
-        <ErrorMessage message={firstNameErrorMessage} show={true} />
+        <ErrorMessage
+          message={firstNameErrorMessage}
+          show={true}
+        />
 
         {/* last name input */}
         <div className="input-wrap">
           <label>{"Last Name"}:</label>
           <input placeholder="Baggins" />
         </div>
-        <ErrorMessage message={lastNameErrorMessage} show={true} />
+        <ErrorMessage
+          message={lastNameErrorMessage}
+          show={true}
+        />
 
         {/* Email Input */}
         <div className="input-wrap">
           <label>{"Email"}:</label>
           <input placeholder="bilbo-baggins@adventurehobbits.net" />
         </div>
-        <ErrorMessage message={emailErrorMessage} show={true} />
+        <ErrorMessage
+          message={emailErrorMessage}
+          show={true}
+        />
 
         {/* City Input */}
         <div className="input-wrap">
           <label>{"City"}:</label>
           <input placeholder="Hobbiton" />
         </div>
-        <ErrorMessage message={cityErrorMessage} show={true} />
+        <ErrorMessage
+          message={cityErrorMessage}
+          show={true}
+        />
 
         <div className="input-wrap">
           <label htmlFor="phone">Phone:</label>
           <div id="phone-input-wrap">
-            <input type="text" id="phone-input-1" placeholder="55" />
+            <input
+              type="text"
+              id="phone-input-1"
+              placeholder="55"
+            />
             -
-            <input type="text" id="phone-input-2" placeholder="55" />
+            <input
+              type="text"
+              id="phone-input-2"
+              placeholder="55"
+            />
             -
-            <input type="text" id="phone-input-3" placeholder="55" />
+            <input
+              type="text"
+              id="phone-input-3"
+              placeholder="55"
+            />
             -
-            <input type="text" id="phone-input-4" placeholder="5" />
+            <input
+              type="text"
+              id="phone-input-4"
+              placeholder="5"
+            />
           </div>
         </div>
 
-        <ErrorMessage message={phoneNumberErrorMessage} show={true} />
+        <ErrorMessage
+          message={phoneNumberErrorMessage}
+          show={true}
+        />
 
-        <input type="submit" value="Submit" />
+        <input
+          type="submit"
+          value="Submit"
+        />
       </form>
     );
   }
