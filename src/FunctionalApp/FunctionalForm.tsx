@@ -14,19 +14,9 @@ const cityErrorMessage = "City is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
 export const FunctionalForm = ({
-  userData,
   setUserData,
 }: {
-  userData: UserInformation | null;
-  setUserData: React.Dispatch<
-    React.SetStateAction<{
-      firstName: string;
-      lastName: string;
-      email: string;
-      city: string;
-      phone: string;
-    }>
-  >;
+  setUserData: React.Dispatch<React.SetStateAction<UserInformation | null>>;
 }) => {
   const [firstNameInput, setFirstNameInput] = useState("");
   const [lastNameInput, setLastNameInput] = useState("");
@@ -82,6 +72,7 @@ export const FunctionalForm = ({
         passUserData();
         setIsSubmitted(true);
         reset();
+        setIsSubmitted(false);
       }}
     >
       <u>
@@ -146,7 +137,41 @@ export const FunctionalForm = ({
       )}
 
       {/* City Input */}
-      <TextInput
+      <div className="input-wrap">
+        <label htmlFor="city">City</label>
+        <select
+          className="selectedCity"
+          value={cityInput}
+          onChange={(e) => {
+            setCityInput(e.target.value);
+            // setUserData((prev) => ({
+            //   ...prev,
+            //   city: cityInput,
+            // }));
+          }}
+        >
+          <option
+            value=""
+            disabled
+            selected
+            className="disabled-option"
+          >
+            Hobbiton
+          </option>
+          {allCities.map((city, i) => (
+            <option
+              key={i}
+              value={city}
+              // onChange={() => {
+              //   setEmailInput(city);
+              // }}
+            >
+              {city}
+            </option>
+          ))}
+        </select>
+      </div>
+      {/* <TextInput
         inputProps={{
           onChange: (e) => {
             setCityInput(e.target.value);
@@ -156,7 +181,7 @@ export const FunctionalForm = ({
           ref: nameRef,
         }}
         labelText={"City"}
-      />
+      /> */}
       {showCityInputError && (
         <ErrorMessage
           message={cityErrorMessage}

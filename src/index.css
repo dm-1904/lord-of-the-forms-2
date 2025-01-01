@@ -64,14 +64,32 @@ form label {
   font-family: RingBearer;
 }
 
-form input {
+form input,
+select {
   font-size: 15px;
   padding-left: 4px;
   font-family: MorrisRoman;
 }
 
-form input:not([type="submit"]) {
+form select,
+input:not([type="submit"]) {
   width: 300px;
+}
+
+form select {
+  width: 310px;
+  border: 1.5;
+  padding: 4px 1px 2px 1px;
+  /* color: rgb(117, 117, 117); */
+}
+
+form select option:disabled {
+  /* color: rgb(117, 117, 117); */
+  color: green;
+}
+
+.disabled-option {
+  color: green;
 }
 
 input[type="submit"] {

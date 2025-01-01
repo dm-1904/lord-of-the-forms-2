@@ -34,12 +34,27 @@ export const ProfileInformation = ({
         <h3>Your Submitted User Information</h3>
       </u>
       <div className="user-info">
-        <InfoRow label="Email" value={email} />
-        <InfoRow label="First Name" value={firstName} />
-        <InfoRow label="Last Name" value={lastName} />
-        <InfoRow label="City" value={city} />
+        <InfoRow
+          label="Email"
+          value={email}
+        />
+        <InfoRow
+          label="First Name"
+          value={firstName}
+        />
+        <InfoRow
+          label="Last Name"
+          value={lastName}
+        />
+        <InfoRow
+          label="City"
+          value={city}
+        />
         {/* You will need to format the string "nnnnnnn" as "nn-nn-nn-n" */}
-        <InfoRow label="Phone" value={"12-34-56-7"} />
+        <InfoRow
+          label="Phone"
+          value={phone}
+        />
       </div>
     </>
   );
