@@ -18,14 +18,28 @@ export class ClassApp extends Component<Record<string, never>, State> {
     userInformation: null,
   };
 
-  setUserData = () => {
-    this.setState(() => ({
+  // setUserData = () => {
+  //   this.setState(() => ({
+  //     userInformation: {
+  //       email: "",
+  //       firstName: "",
+  //       lastName: "",
+  //       phone: "",
+  //       city: "",
+  //     },
+  //   }));
+  // };
+
+  setUserData = (userData: Partial<UserInformation>) => {
+    this.setState((prevState) => ({
       userInformation: {
-        email: "",
-        firstName: "",
-        lastName: "",
-        phone: "",
-        city: "",
+        firstName:
+          userData.firstName ?? prevState.userInformation?.firstName ?? "",
+        lastName:
+          userData.lastName ?? prevState.userInformation?.lastName ?? "",
+        email: userData.email ?? prevState.userInformation?.email ?? "",
+        city: userData.city ?? prevState.userInformation?.city ?? "",
+        phone: userData.phone ?? prevState.userInformation?.phone ?? "",
       },
     }));
   };

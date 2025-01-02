@@ -1,5 +1,9 @@
-import { Component } from "react";
+import { Component, createRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
+import { isEmailValid } from "../utils/validations";
+import { allCities } from "../utils/all-cities";
+import { formatPhoneNumber } from "../utils/transformations";
+import { UserInformation } from "../types";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -8,11 +12,55 @@ const cityErrorMessage = "State is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
 interface ClassFormProps {
-  setUserData: () => void;
+  setUserData: (userData: Partial<UserInformation>) => void;
 }
 
 export class ClassForm extends Component<ClassFormProps> {
+  state = {
+    firstNameInput: "",
+    lastNameInput: "",
+    emailInput: "",
+    cityInput: "",
+    phoneInput: ["", "", "", ""],
+    isSubmitted: false,
+  };
+
+  isFirstNameInputValid: boolean = this.state.firstNameInput.length > 2;
+  isLastNameInputValid: boolean = this.state.lastNameInput.length > 2;
+  isEmailInputValid: boolean = isEmailValid(this.state.emailInput);
+  isCityInputValid: boolean = allCities.includes(this.state.cityInput);
+  isPhoneInputValid: boolean = formatPhoneNumber(
+    this.state.phoneInput.join("")
+  );
+
+  showFirstNameError = this.state.isSubmitted && !this.isFirstNameInputValid;
+  showLastNameError = this.state.isSubmitted && !this.isLastNameInputValid;
+  showEmailInputError = this.state.isSubmitted && !this.isEmailInputValid;
+  showCityInputError = this.state.isSubmitted && !this.isCityInputValid;
+  showPhoneInputError = this.state.isSubmitted && !this.isPhoneInputValid;
+
+  nameRef = createRef<HTMLInputElement>();
+
+  passUserData = () => {
+    if (
+      this.isFirstNameInputValid &&
+      this.isLastNameInputValid &&
+      this.isEmailInputValid &&
+      this.isCityInputValid &&
+      this.isPhoneInputValid
+    ) {
+      this.props.setUserData({
+        firstName: this.state.firstNameInput,
+        lastName: this.state.lastNameInput,
+        email: this.state.emailInput,
+        city: this.state.cityInput,
+        phone: this.state.phoneInput.join(""),
+      });
+    }
+  };
+
   render() {
+    console.log(this.props);
     return (
       <form>
         <u>
