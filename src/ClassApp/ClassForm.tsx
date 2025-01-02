@@ -5,7 +5,7 @@ import { allCities } from "../utils/all-cities";
 import { capitalize, formatPhoneNumber } from "../utils/transformations";
 import { UserInformation } from "../types";
 import { ClassTextInput } from "./ClassComponents/ClassTextInput";
-import { Phone, PhoneInput } from "./ClassComponents/ClassPhoneInput"; // Import PhoneInput type
+import { Phone, PhoneInput } from "./ClassComponents/ClassPhoneInput";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -23,18 +23,18 @@ export class ClassForm extends Component<ClassFormProps> {
     lastNameInput: "",
     emailInput: "",
     cityInput: "",
-    phoneInput: ["", "", "", ""] as PhoneInput, // Ensure it matches the PhoneInput type
+    phoneInput: ["", "", "", ""] as PhoneInput,
     isSubmitted: false,
   };
 
-  isFirstNameInputValid: boolean = this.state.firstNameInput.length > 2;
+  isFirstNameInputValid: boolean = this.state.firstNameInput.length >= 2;
   isLastNameInputValid: boolean = this.state.lastNameInput.length > 2;
   isEmailInputValid: boolean = isEmailValid(this.state.emailInput);
   isCityInputValid: boolean = allCities.includes(this.state.cityInput);
   isPhoneInputValid: boolean = formatPhoneNumber(
     this.state.phoneInput.join("")
   );
-
+  // refactor these variables to be methods so that they will run properly
   showFirstNameError = this.state.isSubmitted && !this.isFirstNameInputValid;
   showLastNameError = this.state.isSubmitted && !this.isLastNameInputValid;
   showEmailInputError = this.state.isSubmitted && !this.isEmailInputValid;
@@ -61,13 +61,17 @@ export class ClassForm extends Component<ClassFormProps> {
     }
   };
 
+  logState = () => {
+    console.log("state", this.state);
+  };
+
   reset = () => {
     this.setState({
       firstNameInput: "",
       lastNameInput: "",
       emailInput: "",
       cityInput: "",
-      phoneInput: ["", "", "", ""] as PhoneInput, // Reset to 4-element array
+      phoneInput: ["", "", "", ""] as PhoneInput,
       isSubmitted: false,
     });
   };
@@ -77,11 +81,15 @@ export class ClassForm extends Component<ClassFormProps> {
   };
 
   render() {
+    console.log("submitted", this.state.isSubmitted);
+    console.log("first name valid", this.isFirstNameInputValid);
+    console.log("show error", this.showFirstNameError);
     return (
       <form
         onSubmit={(e) => {
           e.preventDefault();
           this.setState({ isSubmitted: true });
+          console.log("in submit", this.state.isSubmitted);
         }}
       >
         <u>
@@ -100,12 +108,20 @@ export class ClassForm extends Component<ClassFormProps> {
           }}
           labelText={"First Name"}
         />
+
         {this.showFirstNameError && (
           <ErrorMessage
             message={firstNameErrorMessage}
             show={true}
           />
         )}
+        <div>
+          <label htmlFor="">State.isSumbitted</label>
+          <input
+            type="text"
+            value={this.state.isSubmitted}
+          />
+        </div>
 
         <ClassTextInput
           inputProps={{
