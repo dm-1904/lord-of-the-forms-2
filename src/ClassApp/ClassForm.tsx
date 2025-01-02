@@ -2,13 +2,15 @@ import { Component, createRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { isEmailValid } from "../utils/validations";
 import { allCities } from "../utils/all-cities";
-import { formatPhoneNumber } from "../utils/transformations";
+import { capitalize, formatPhoneNumber } from "../utils/transformations";
 import { UserInformation } from "../types";
+import { ClassTextInput } from "./ClassComponents/ClassTextInput";
+import { Phone, PhoneInput } from "./ClassComponents/ClassPhoneInput"; // Import PhoneInput type
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
 const emailErrorMessage = "Email is Invalid";
-const cityErrorMessage = "State is Invalid";
+const cityErrorMessage = "City is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
 interface ClassFormProps {
@@ -21,7 +23,7 @@ export class ClassForm extends Component<ClassFormProps> {
     lastNameInput: "",
     emailInput: "",
     cityInput: "",
-    phoneInput: ["", "", "", ""],
+    phoneInput: ["", "", "", ""] as PhoneInput, // Ensure it matches the PhoneInput type
     isSubmitted: false,
   };
 
@@ -59,87 +61,134 @@ export class ClassForm extends Component<ClassFormProps> {
     }
   };
 
+  reset = () => {
+    this.setState({
+      firstNameInput: "",
+      lastNameInput: "",
+      emailInput: "",
+      cityInput: "",
+      phoneInput: ["", "", "", ""] as PhoneInput, // Reset to 4-element array
+      isSubmitted: false,
+    });
+  };
+
+  setPhoneInput = (newPhoneInput: PhoneInput) => {
+    this.setState({ phoneInput: newPhoneInput });
+  };
+
   render() {
-    console.log(this.props);
     return (
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.setState({ isSubmitted: true });
+        }}
+      >
         <u>
           <h3>User Information Form</h3>
         </u>
 
-        {/* first name input */}
-        <div className="input-wrap">
-          <label>{"First Name"}:</label>
-          <input placeholder="Bilbo" />
-        </div>
-        <ErrorMessage
-          message={firstNameErrorMessage}
-          show={true}
+        <ClassTextInput
+          inputProps={{
+            onChange: (e) => {
+              const capitalizedValue = capitalize(e.target.value);
+              this.setState({ firstNameInput: capitalizedValue });
+            },
+            value: this.state.firstNameInput,
+            placeholder: "Bilbo",
+            ref: this.nameRef,
+          }}
+          labelText={"First Name"}
         />
+        {this.showFirstNameError && (
+          <ErrorMessage
+            message={firstNameErrorMessage}
+            show={true}
+          />
+        )}
 
-        {/* last name input */}
-        <div className="input-wrap">
-          <label>{"Last Name"}:</label>
-          <input placeholder="Baggins" />
-        </div>
-        <ErrorMessage
-          message={lastNameErrorMessage}
-          show={true}
+        <ClassTextInput
+          inputProps={{
+            onChange: (e) => {
+              const capitalizedValue = capitalize(e.target.value);
+              this.setState({ lastNameInput: capitalizedValue });
+            },
+            value: this.state.lastNameInput,
+            placeholder: "Baggins",
+            ref: this.nameRef,
+          }}
+          labelText={"Last Name"}
         />
+        {this.showLastNameError && (
+          <ErrorMessage
+            message={lastNameErrorMessage}
+            show={true}
+          />
+        )}
 
-        {/* Email Input */}
-        <div className="input-wrap">
-          <label>{"Email"}:</label>
-          <input placeholder="bilbo-baggins@adventurehobbits.net" />
-        </div>
-        <ErrorMessage
-          message={emailErrorMessage}
-          show={true}
+        <ClassTextInput
+          inputProps={{
+            onChange: (e) => {
+              const capitalizedValue = capitalize(e.target.value);
+              this.setState({ emailInput: capitalizedValue });
+            },
+            value: this.state.emailInput,
+            placeholder: "bilbo-baggins@adventurehobbits.net",
+            ref: this.nameRef,
+          }}
+          labelText={"Email"}
         />
+        {this.showEmailInputError && (
+          <ErrorMessage
+            message={emailErrorMessage}
+            show={true}
+          />
+        )}
 
-        {/* City Input */}
         <div className="input-wrap">
           <label>{"City"}:</label>
-          <input placeholder="Hobbiton" />
+          <select
+            className="selectedCity"
+            value={this.state.cityInput}
+            onChange={(e) => {
+              this.setState({ cityInput: e.target.value });
+            }}
+          >
+            <option
+              value=""
+              disabled
+              selected
+              className="disabled-option"
+            >
+              Hobbiton
+            </option>
+            {allCities.map((city, i) => (
+              <option
+                key={i}
+                value={city}
+              >
+                {city}
+              </option>
+            ))}
+          </select>
         </div>
-        <ErrorMessage
-          message={cityErrorMessage}
-          show={true}
-        />
+        {this.showCityInputError && (
+          <ErrorMessage
+            message={cityErrorMessage}
+            show={true}
+          />
+        )}
 
-        <div className="input-wrap">
-          <label htmlFor="phone">Phone:</label>
-          <div id="phone-input-wrap">
-            <input
-              type="text"
-              id="phone-input-1"
-              placeholder="55"
-            />
-            -
-            <input
-              type="text"
-              id="phone-input-2"
-              placeholder="55"
-            />
-            -
-            <input
-              type="text"
-              id="phone-input-3"
-              placeholder="55"
-            />
-            -
-            <input
-              type="text"
-              id="phone-input-4"
-              placeholder="5"
-            />
-          </div>
-        </div>
-
-        <ErrorMessage
-          message={phoneNumberErrorMessage}
-          show={true}
+        <Phone
+          phoneInput={this.state.phoneInput}
+          setPhoneInput={this.setPhoneInput}
         />
+        {this.showPhoneInputError && (
+          <ErrorMessage
+            message={phoneNumberErrorMessage}
+            show={true}
+          />
+        )}
 
         <input
           type="submit"
