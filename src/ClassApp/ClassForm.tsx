@@ -27,43 +27,23 @@ export class ClassForm extends Component<ClassFormProps> {
     isSubmitted: false,
   };
 
-  isFirstNameInputValid: boolean = this.state.firstNameInput.length >= 2;
-  isLastNameInputValid: boolean = this.state.lastNameInput.length > 2;
-  isEmailInputValid: boolean = isEmailValid(this.state.emailInput);
-  isCityInputValid: boolean = allCities.includes(this.state.cityInput);
-  isPhoneInputValid: boolean = formatPhoneNumber(
-    this.state.phoneInput.join("")
-  );
-  // refactor these variables to be methods so that they will run properly
-  showFirstNameError = this.state.isSubmitted && !this.isFirstNameInputValid;
-  showLastNameError = this.state.isSubmitted && !this.isLastNameInputValid;
-  showEmailInputError = this.state.isSubmitted && !this.isEmailInputValid;
-  showCityInputError = this.state.isSubmitted && !this.isCityInputValid;
-  showPhoneInputError = this.state.isSubmitted && !this.isPhoneInputValid;
+  isFirstNameInputValid = () => this.state.firstNameInput.length >= 2;
+  isLastNameInputValid = () => this.state.lastNameInput.length > 2;
+  isEmailInputValid = () => isEmailValid(this.state.emailInput);
+  isCityInputValid = () => allCities.includes(this.state.cityInput);
+  isPhoneInputValid = () => formatPhoneNumber(this.state.phoneInput.join(""));
+
+  showFirstNameError = () =>
+    this.state.isSubmitted && !this.isFirstNameInputValid();
+  showLastNameError = () =>
+    this.state.isSubmitted && !this.isLastNameInputValid();
+  showEmailInputError = () =>
+    this.state.isSubmitted && !this.isEmailInputValid();
+  showCityInputError = () => this.state.isSubmitted && !this.isCityInputValid();
+  showPhoneInputError = () =>
+    this.state.isSubmitted && !this.isPhoneInputValid();
 
   nameRef = createRef<HTMLInputElement>();
-
-  passUserData = () => {
-    if (
-      this.isFirstNameInputValid &&
-      this.isLastNameInputValid &&
-      this.isEmailInputValid &&
-      this.isCityInputValid &&
-      this.isPhoneInputValid
-    ) {
-      this.props.setUserData({
-        firstName: this.state.firstNameInput,
-        lastName: this.state.lastNameInput,
-        email: this.state.emailInput,
-        city: this.state.cityInput,
-        phone: this.state.phoneInput.join(""),
-      });
-    }
-  };
-
-  logState = () => {
-    console.log("state", this.state);
-  };
 
   reset = () => {
     this.setState({
@@ -76,20 +56,40 @@ export class ClassForm extends Component<ClassFormProps> {
     });
   };
 
+  passUserData = () => {
+    if (
+      this.isFirstNameInputValid() &&
+      this.isLastNameInputValid() &&
+      this.isEmailInputValid() &&
+      this.isCityInputValid() &&
+      this.isPhoneInputValid()
+    ) {
+      this.props.setUserData({
+        firstName: this.state.firstNameInput,
+        lastName: this.state.lastNameInput,
+        email: this.state.emailInput,
+        city: this.state.cityInput,
+        phone: this.state.phoneInput.join("-"),
+      });
+      this.reset();
+    }
+  };
+
+  logState = () => {
+    console.log("state", this.state);
+  };
+
   setPhoneInput = (newPhoneInput: PhoneInput) => {
     this.setState({ phoneInput: newPhoneInput });
   };
 
   render() {
-    console.log("submitted", this.state.isSubmitted);
-    console.log("first name valid", this.isFirstNameInputValid);
-    console.log("show error", this.showFirstNameError);
     return (
       <form
         onSubmit={(e) => {
           e.preventDefault();
           this.setState({ isSubmitted: true });
-          console.log("in submit", this.state.isSubmitted);
+          this.passUserData();
         }}
       >
         <u>
@@ -109,19 +109,12 @@ export class ClassForm extends Component<ClassFormProps> {
           labelText={"First Name"}
         />
 
-        {this.showFirstNameError && (
+        {this.showFirstNameError() && (
           <ErrorMessage
             message={firstNameErrorMessage}
             show={true}
           />
         )}
-        <div>
-          <label htmlFor="">State.isSumbitted</label>
-          <input
-            type="text"
-            value={this.state.isSubmitted}
-          />
-        </div>
 
         <ClassTextInput
           inputProps={{
@@ -135,7 +128,7 @@ export class ClassForm extends Component<ClassFormProps> {
           }}
           labelText={"Last Name"}
         />
-        {this.showLastNameError && (
+        {this.showLastNameError() && (
           <ErrorMessage
             message={lastNameErrorMessage}
             show={true}
@@ -154,7 +147,7 @@ export class ClassForm extends Component<ClassFormProps> {
           }}
           labelText={"Email"}
         />
-        {this.showEmailInputError && (
+        {this.showEmailInputError() && (
           <ErrorMessage
             message={emailErrorMessage}
             show={true}
@@ -188,7 +181,7 @@ export class ClassForm extends Component<ClassFormProps> {
             ))}
           </select>
         </div>
-        {this.showCityInputError && (
+        {this.showCityInputError() && (
           <ErrorMessage
             message={cityErrorMessage}
             show={true}
@@ -199,7 +192,7 @@ export class ClassForm extends Component<ClassFormProps> {
           phoneInput={this.state.phoneInput}
           setPhoneInput={this.setPhoneInput}
         />
-        {this.showPhoneInputError && (
+        {this.showPhoneInputError() && (
           <ErrorMessage
             message={phoneNumberErrorMessage}
             show={true}

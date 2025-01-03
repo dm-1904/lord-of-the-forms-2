@@ -1,10 +1,10 @@
 import { Component, ChangeEvent, createRef } from "react";
 
-export type PhoneInput = ["", "", "", ""]; // Fixed type of phoneInput to have exactly 4 elements
+export type PhoneInput = ["", "", "", ""];
 
 interface PhoneProps {
-  phoneInput: PhoneInput; // Ensure type is PhoneInput
-  setPhoneInput: (newPhoneInput: PhoneInput) => void; // Function to update phoneInput
+  phoneInput: PhoneInput;
+  setPhoneInput: (newPhoneInput: PhoneInput) => void;
 }
 
 export class Phone extends Component<PhoneProps> {

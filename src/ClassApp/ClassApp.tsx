@@ -4,31 +4,10 @@ import { UserInformation } from "../types";
 import { ProfileInformation } from "../ProfileInformation";
 type State = { userInformation: UserInformation | null };
 
-// const defaultUser: UserInformation = {
-//   email: "default@default.com",
-//   firstName: "Default",
-//   lastName: "Default",
-//   phone: "1234567",
-//   city: "Hobbiton",
-// };
-// console.log(this.State);
-
 export class ClassApp extends Component<Record<string, never>, State> {
   state: State = {
     userInformation: null,
   };
-
-  // setUserData = () => {
-  //   this.setState(() => ({
-  //     userInformation: {
-  //       email: "",
-  //       firstName: "",
-  //       lastName: "",
-  //       phone: "",
-  //       city: "",
-  //     },
-  //   }));
-  // };
 
   setUserData = (userData: Partial<UserInformation>) => {
     this.setState((prevState) => ({
