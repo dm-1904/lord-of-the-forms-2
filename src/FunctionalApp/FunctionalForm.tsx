@@ -2,9 +2,9 @@ import { useState, useRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { TextInput } from "./Components/TextInput";
 import { UserInformation } from "../types";
-import { isEmailValid } from "../utils/validations";
+import { isEmailValid, isNameValid } from "../utils/validations";
 import { allCities } from "../utils/all-cities";
-import { capitalize, formatPhoneNumber } from "../utils/transformations";
+import { formatPhoneNumber } from "../utils/transformations";
 import { Phone } from "./Components/PhoneInput";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
@@ -25,8 +25,8 @@ export const FunctionalForm = ({
   const [phoneInput, setPhoneInput] = useState(["", "", "", ""]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const isFirstNameInputValid: boolean = firstNameInput.length > 2;
-  const isLastNameInputValid: boolean = lastNameInput.length > 2;
+  const isFirstNameInputValid: boolean = isNameValid(firstNameInput);
+  const isLastNameInputValid: boolean = isNameValid(lastNameInput);
   const isEmailInputValid: boolean = isEmailValid(emailInput);
   const isCityInputValid: boolean = allCities.includes(cityInput);
   const isPhoneInputValid: boolean = formatPhoneNumber(phoneInput.join(""));
@@ -38,6 +38,16 @@ export const FunctionalForm = ({
   const showPhoneInputError = isSubmitted && !isPhoneInputValid;
 
   const nameRef = useRef<HTMLInputElement>(null);
+
+  const handleNameChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      let value = e.target.value.replace(/[^A-Za-z]/g, "");
+      if (value.length > 0) {
+        value = value.charAt(0).toUpperCase() + value.slice(1);
+      }
+      setter(value);
+    };
 
   const passUserData = () => {
     if (
@@ -54,6 +64,7 @@ export const FunctionalForm = ({
         city: cityInput,
         phone: phoneInput.join("-"),
       });
+      reset();
     }
   };
 
@@ -63,16 +74,15 @@ export const FunctionalForm = ({
     setEmailInput("");
     setCityInput("");
     setPhoneInput(["", "", "", ""]);
+    setIsSubmitted(false);
   };
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        passUserData();
         setIsSubmitted(true);
-        reset();
-        setIsSubmitted(false);
+        passUserData();
       }}
     >
       <u>
@@ -82,9 +92,7 @@ export const FunctionalForm = ({
       {/* first name input */}
       <TextInput
         inputProps={{
-          onChange: (e) => {
-            setFirstNameInput(capitalize(e.target.value));
-          },
+          onChange: handleNameChange(setFirstNameInput),
           value: firstNameInput,
           placeholder: "Bilbo",
           ref: nameRef,
@@ -101,9 +109,7 @@ export const FunctionalForm = ({
       {/* last name input */}
       <TextInput
         inputProps={{
-          onChange: (e) => {
-            setLastNameInput(capitalize(e.target.value));
-          },
+          onChange: handleNameChange(setLastNameInput),
           value: lastNameInput,
           placeholder: "Baggins",
           ref: nameRef,
@@ -144,10 +150,6 @@ export const FunctionalForm = ({
           value={cityInput}
           onChange={(e) => {
             setCityInput(e.target.value);
-            // setUserData((prev) => ({
-            //   ...prev,
-            //   city: cityInput,
-            // }));
           }}
         >
           <option
@@ -162,26 +164,12 @@ export const FunctionalForm = ({
             <option
               key={i}
               value={city}
-              // onChange={() => {
-              //   setEmailInput(city);
-              // }}
             >
               {city}
             </option>
           ))}
         </select>
       </div>
-      {/* <TextInput
-        inputProps={{
-          onChange: (e) => {
-            setCityInput(e.target.value);
-          },
-          value: cityInput,
-          placeholder: "Hobbiton",
-          ref: nameRef,
-        }}
-        labelText={"City"}
-      /> */}
       {showCityInputError && (
         <ErrorMessage
           message={cityErrorMessage}

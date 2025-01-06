@@ -138,8 +138,7 @@ export class ClassForm extends Component<ClassFormProps> {
         <ClassTextInput
           inputProps={{
             onChange: (e) => {
-              const capitalizedValue = capitalize(e.target.value);
-              this.setState({ emailInput: capitalizedValue });
+              this.setState({ emailInput: e.target.value });
             },
             value: this.state.emailInput,
             placeholder: "bilbo-baggins@adventurehobbits.net",
